@@ -1,0 +1,36 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Голосуй прост0)00))</title>
+    <link rel="stylesheet" type = "text/css" href="{% static "static/css/foundation.css" %}">
+    <style>
+    .menu {
+        position: absolute; /* Фиксированное положение */
+        right: 10px; /* Расстояние от правого края окна браузера */
+        top: 5%; /* Расстояние сверху */
+        padding: 10px; /* Поля вокруг текста */
+        background: #ffe; /* Цвет фона */
+        border: 1px solid #333; /* Параметры рамки */
+        }
+        .text {
+        height: 10%;
+        width: 10%;
+    }
+    </style>
+</head>
+<body>
+<h1><a href = "/">Голосовалка</a></h1>
+    <div class="menu">
+        Для того, чтобы создать голосование, необходимо <br>
+        <a href = "/vote/login/">войти</a> или <a href="/vote/reg/">зарегестрироваться.</a> </div>
+    <div class="row">
+        {% block votes %}
+        {% endblock %}
+        {% block addanswers %}
+        {% endblock %}
+        {% block vote %}
+        {% endblock %}
+    </div>
+</body>
+</html>
