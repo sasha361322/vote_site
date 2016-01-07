@@ -19,7 +19,7 @@ def votes(request):
 
 def vote(request, vote_id):
     vote = Vote.objects.get(id=vote_id)
-    answers = Answer.objects.filter(id_vote=vote_id)
+    answers = Answer.objects.filter(answer_vote=vote)
     return render_to_response('vote/vote.html', {'vote':vote,'answers':answers})
 
 def addanswer(request, description_id):

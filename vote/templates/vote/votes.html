@@ -9,10 +9,10 @@
             Тема
         </td>
     </tr>
-    {% for v in votes %}
+    {% for vote in votes %}
     <tr>
         <td>
-            <a href = "/vote/get/{{ v.id }}"> {{ v.theme }}</a>
+            <a href = "/vote/get/{{ vote.id }}"> {{ vote.question }}</a>
         </td>
     </tr>
     {% endfor %}
