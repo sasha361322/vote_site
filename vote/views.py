@@ -49,7 +49,7 @@ def addvote(request):
             vote.is_single = 1
             form.save()
             args['vote'] = vote
-            args['answers']=Answer.objects.filter(id_vote=vote.id)
+            args['answers']=Answer.objects.filter(answer_vote=vote)
     return render_to_response('vote/addanswers.html', args)
 
 def addanswers(request, id_v, n):
@@ -57,7 +57,7 @@ def addanswers(request, id_v, n):
         form = AnswerForm(request.POST)
         if form.is_valid():
             args = {}
-            #args.update(csrf(request))
+            args.update(csrf(request))
             answer = form.save(commit=False)
             answer.count = 0
             answer.number = n
