@@ -8,5 +8,6 @@ class VoteInLine(admin.StackedInline):
 class VoteAdmin(admin.ModelAdmin):
         fields = ['question', 'date', 'is_single']
         inlines = [VoteInLine]
+        list_filter = ['date']
 
 admin.site.register(Vote, VoteAdmin)
