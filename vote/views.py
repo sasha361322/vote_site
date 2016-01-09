@@ -12,17 +12,17 @@ def votes(request):
     vote_form = VoteForm
     args = {}
     args.update(csrf(request))
-    args['answers'] = Answer.objects.all()
     args['votes'] = Vote.objects.all()
     args['form'] = vote_form
     return render_to_response('vote/votes.html', args)
 
-def vote(request, vote_id):
-    vote = Vote.objects.get(id=vote_id)
-    answers = Answer.objects.filter(answer_vote=vote)
-    return render_to_response('vote/vote.html', {'vote':vote,'answers':answers})
 
-def addanswer(request, description_id):
+def vote(request, vote_id):
+    return render_to_response('vote/vote.html', {'vote': Vote.objects.get(id=vote_id),
+                                                 'answers': Answer.objects.filter(answer_vote_id=vote_id)})
+
+
+def addanswer(request, description_id=1):
     try:
         if description_id in request.COOKIES:
             redirect('/')
@@ -35,7 +35,7 @@ def addanswer(request, description_id):
             return response
     except ObjectDoesNotExist:
         raise Http404
-    return redirect ("/")
+    return redirect("/")
 
 
 def addvote(request):
@@ -46,13 +46,12 @@ def addvote(request):
             args.update(csrf(request))
             vote = form.save(commit=False)
             vote.date = datetime.now()
-            vote.is_single = 1
             form.save()
             args['vote'] = vote
             args['answers']=Answer.objects.filter(answer_vote=vote)
     return render_to_response('vote/addanswers.html', args)
 
-def addanswers(request, id_v, n):
+def addanswers(request, id_v=1):
     if request.POST:
         form = AnswerForm(request.POST)
         if form.is_valid():
@@ -60,7 +59,6 @@ def addanswers(request, id_v, n):
             args.update(csrf(request))
             answer = form.save(commit=False)
             answer.count = 0
-            answer.number = n
             answer.id_vote = id_v
             form.save()
             args['vote'] = Vote.objects.get(id=vote.id)
