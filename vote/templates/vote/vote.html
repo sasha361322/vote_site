@@ -2,10 +2,10 @@
 {% load staticfiles %}
 
 {% block vote %}
+    <div class="large-offset-1 large-8 columns">
 <h4> {{ vote.date }}</h4>
 <h2> {{ vote.theme }}</h2>
 <hr>
-    <div class="large-offset-1 large-8 columns">
 <p>Варианты ответа:</p>
     {% if vote.is_single %}
         <table border="1" bgcolor="">
@@ -14,7 +14,7 @@
                         {{ answer.text }}
                     </td>
                     <td>
-                        <a href="/vote/addanswer/{{ answer.id }}/">+</a>
+                        <a href="/vote/addanswer/{{ vote.id }}/{{ answer.id }}/">+</a>
                     </td>
                     <td>
                         {{ answer.count }}
