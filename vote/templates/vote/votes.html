@@ -17,10 +17,13 @@
     </tr>
     {% endfor %}
 </table>
+    {% if username %}
     <form action="/vote/addvote/" method="post">
         {% csrf_token %}
         {{ form }}
+        <br>
         <input type="submit" class="button" value="Добавить голосование">
     </form>
+    {% endif %}
     </div>
 {% endblock %}

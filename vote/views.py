@@ -6,7 +6,7 @@ from django.http.response import *
 from forms import *
 from django.core.context_processors import *
 from datetime import datetime
-
+from django.contrib import auth
 
 def votes(request):
     vote_form = VoteForm
@@ -14,17 +14,19 @@ def votes(request):
     args.update(csrf(request))
     args['votes'] = Vote.objects.all()
     args['form'] = vote_form
+    args['username'] = auth.get_user(request).username
     return render_to_response('vote/votes.html', args)
 
 
 def vote(request, vote_id):
     return render_to_response('vote/vote.html', {'vote': Vote.objects.get(id=vote_id),
-                                                 'answers': Answer.objects.filter(answer_vote_id=vote_id)})
+                                                 'answers': Answer.objects.filter(answer_vote_id=vote_id),
+                                                 'username': auth.get_user(request).username})
 
 
 def addanswer(request, vote_id=1,answer_id=1):
     try:
-        if vote_id in request.COOKIES:
+        if (vote_id in request.COOKIES) or ("pause" in request.session):
             redirect('/')
         else:
             answer = Answer.objects.get(id=answer_id)
@@ -32,6 +34,8 @@ def addanswer(request, vote_id=1,answer_id=1):
             answer.save()
             response = redirect('/vote/get/%s/' % Answer.objects.get(id=answer_id).answer_vote_id)
             response.set_cookie(vote_id, "test")
+            request.session.set_expiry(60)
+            request.session['pause'] = True
             return response
     except ObjectDoesNotExist:
         raise Http404

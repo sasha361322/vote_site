@@ -4,33 +4,25 @@
 <head>
     <title>Голосуй прост0)00))</title>
     <link rel="stylesheet" type = "text/css" href="{% static "static/css/foundation.css" %}">
-    <style>
-    .menu {
-        position: absolute; /* Фиксированное положение */
-        right: 10px; /* Расстояние от правого края окна браузера */
-        top: 5%; /* Расстояние сверху */
-        padding: 10px; /* Поля вокруг текста */
-        background: #ffe; /* Цвет фона */
-        border: 1px solid #333; /* Параметры рамки */
-        }
-        .text {
-        height: 10%;
-        width: 10%;
-    }
-    </style>
 </head>
 <body>
+<div class = "top-bar">
+    <section class = "top-bar-right">
+        <ul class = "right">
+            {% if username %}
+                <li><a href="/auth/logout/">Выйти ({{ username }})</a></li>
+            {% else %}
+                <li><a href="/auth/login/">Войти</a></li>
+            {% endif %}
+        </ul>
+    </section>
+</div>
 <h1><a href = "/">Голосовалка</a></h1>
-    <div class="menu">
-        Для того, чтобы создать голосование, необходимо <br>
-        <a href = "/vote/login/">войти</a> или <a href="/vote/reg/">зарегестрироваться.</a> </div>
     <div class="row">
-        {% block votes %}
-        {% endblock %}
-        {% block vote %}
-        {% endblock %}
-        {% block addanswers %}
-        {% endblock %}
+        {% block votes %}{% endblock %}
+        {% block vote %}{% endblock %}
+        {% block addanswers %}{% endblock %}
+        {% block login %}{% endblock %}
     </div>
 <div class="footer" style=" background: #222222; text-align: center; padding: 20px 0 2px 0; bottom: 0px; position: relative; width: 100%;">
     <p style="color: #FFFFFF; font-size: 11px">2015. © http://127.0.0.1:8000<br>

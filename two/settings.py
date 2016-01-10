@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'vote'
+    'vote',
+    'loginsys',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -57,7 +58,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'templates'),
-                 os.path.join(BASE_DIR, 'vote/templates')]
+                 os.path.join(BASE_DIR, 'vote/templates'),
+                 os.path.join(BASE_DIR, 'loginsys/templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
