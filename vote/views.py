@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.shortcuts import *
 from .models import *
@@ -7,12 +8,16 @@ from forms import *
 from django.core.context_processors import *
 from datetime import datetime
 from django.contrib import auth
+from django.core.paginator import Paginator
 
-def votes(request):
+
+def votes(request, page_number=1):
+    all_votes = Vote.objects.all()
+    current_page = Paginator(all_votes, 5)
     vote_form = VoteForm
     args = {}
     args.update(csrf(request))
-    args['votes'] = Vote.objects.all()
+    args['votes'] = current_page.page(page_number)
     args['form'] = vote_form
     args['username'] = auth.get_user(request).username
     return render_to_response('vote/votes.html', args)
@@ -57,6 +62,7 @@ def addvote(request):
             args['form']=answer_form
     return render_to_response('vote/addanswers.html', args)
 
+
 def addanswers(request, vote_id=1):
     if request.POST:
         form = AnswerForm(request.POST)
@@ -69,10 +75,13 @@ def addanswers(request, vote_id=1):
             form.save()
             args['vote'] = Vote.objects.get(id=vote_id)
             answer_form = AnswerForm
-            args['form']=answer_form
-            args['answers']=Answer.objects.filter(answer_vote_id=vote_id)
+            args['form'] = answer_form
+            args['answers'] = Answer.objects.filter(answer_vote_id=vote_id)
     return render_to_response('vote/addanswers.html', args)
 
-
-
-
+def test(request, str):
+    import re
+    re.findall('(\d+)', str)
+    for i in re:
+        Answer.objects.get(id=i).count+=1
+    return redirect("/")

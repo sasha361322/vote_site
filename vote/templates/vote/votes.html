@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 {% load staticfiles %}
 
-{% block votes %}
+{% block vote %}
     <div class="large-8  columns">
 <table border="1">
     <tr>
@@ -18,12 +18,39 @@
     {% endfor %}
 </table>
     {% if username %}
-    <form action="/vote/addvote/" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <br>
-        <input type="submit" class="button" value="Добавить голосование">
-    </form>
+        <h4>Добавить голосование</h4>
+        <form action="/vote/addvote/" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <br>
+            <input type="submit" class="button" value="Добавить голосование">
+        </form>
+    {% else %}
+        <h4>Только авторизованные пользователи могут добавлять голосования</h4>
     {% endif %}
     </div>
+        <div class="row">
+            <div class="large-3 large-offset-5 columns">
+                <ul class="pagination">
+                    {% if votes.has_previous %}
+                        <li class="arrow"><a href="/page/{{ votes.previous_page_number }}/">&laquo;</a> </li>
+                    {% else %}
+                        <li class="arrow unavaliable"><a href="">&laquo;</a> </li>
+                    {% endif %}
+
+                    {% for page in votes.paginator.page_range %}
+                        {% if page == votes.number %}
+                            <li class="current"><a href="/page/{{ page }}/">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="/page/{{ page }}/">{{ page }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if votes.has_next %}
+                        <li class="arrow"><a href="/page/{{ votes.next_page_number }}/">&raquo;</a> </li>
+                    {% else %}
+                        <li class="arrow unavaliable"><a href="">&raquo;</a> </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
 {% endblock %}
