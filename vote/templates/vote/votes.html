@@ -23,7 +23,9 @@
             {% csrf_token %}
             {{ form }}
             <br>
-            <input type="submit" class="button" value="Добавить голосование">
+            {% if form %}
+                <input type="submit" class="button" value="Добавить голосование">
+            {% endif %}
         </form>
     {% else %}
         <h4>Только авторизованные пользователи могут добавлять голосования</h4>

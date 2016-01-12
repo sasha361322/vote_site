@@ -10,7 +10,6 @@ from datetime import datetime
 from django.contrib import auth
 from django.core.paginator import Paginator
 
-
 def votes(request, page_number=1):
     all_votes = Vote.objects.all()
     current_page = Paginator(all_votes, 5)
@@ -29,7 +28,7 @@ def vote(request, vote_id):
                                                  'username': auth.get_user(request).username})
 
 
-def addanswer(request, vote_id=1,answer_id=1):
+def addanswer(request, vote_id=1, answer_id=1):
     try:
         if (vote_id in request.COOKIES) or ("pause" in request.session):
             redirect('/')
@@ -39,8 +38,9 @@ def addanswer(request, vote_id=1,answer_id=1):
             answer.save()
             response = redirect('/vote/get/%s/' % Answer.objects.get(id=answer_id).answer_vote_id)
             response.set_cookie(vote_id, "test")
-            request.session.set_expiry(60)
-            request.session['pause'] = True
+            if not auth.get_user(request).is_authenticated():
+                request.session.set_expiry(60)
+                request.session['pause'] = True
             return response
     except ObjectDoesNotExist:
         raise Http404
@@ -50,17 +50,18 @@ def addanswer(request, vote_id=1,answer_id=1):
 def addvote(request):
     if request.POST:
         form = VoteForm(request.POST)
-        if form.is_valid():
-            args = {}
-            args.update(csrf(request))
-            vote = form.save(commit=False)
-            vote.date = datetime.now()
-            form.save()
-            args['vote'] = vote
-            args['answers']=Answer.objects.filter(answer_vote=vote)
-            answer_form = AnswerForm
-            args['form']=answer_form
-    return render_to_response('vote/addanswers.html', args)
+        if form:
+            if form.is_valid():
+                args = {}
+                args.update(csrf(request))
+                vote = form.save(commit=False)
+                vote.date = datetime.now()
+                form.save()
+                args['vote'] = vote
+                args['answers'] = Answer.objects.filter(answer_vote=vote)
+                args['form'] = AnswerForm
+                return render_to_response('vote/addanswers.html', args)
+    return redirect("/")
 
 
 def addanswers(request, vote_id=1):
@@ -77,11 +78,10 @@ def addanswers(request, vote_id=1):
             answer_form = AnswerForm
             args['form'] = answer_form
             args['answers'] = Answer.objects.filter(answer_vote_id=vote_id)
+            return render_to_response('vote/addanswers.html', args)
+    args = {}
+    args.update(csrf(request))
+    args['vote'] = Vote.objects.get(id=vote_id)
+    args['answers'] = Answer.objects.filter(answer_vote_id=vote_id)
+    args['form'] = AnswerForm
     return render_to_response('vote/addanswers.html', args)
-
-def test(request, str):
-    import re
-    re.findall('(\d+)', str)
-    for i in re:
-        Answer.objects.get(id=i).count+=1
-    return redirect("/")

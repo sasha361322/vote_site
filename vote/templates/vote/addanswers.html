@@ -14,11 +14,21 @@
                 </tr>
             {% endfor %}
         </table>
-     <form action="/vote/addanswers/{{ vote.id }}/" method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" class="button" value="Добавить ответ">
-        </form>
-    <button><a href = "/"> Готово</a></button>
+    {% if answers.count < 10 %}
+         <form action="/vote/addanswers/{{ vote.id }}/" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" class="button" value="Добавить ответ">
+         </form>
+    {% else %}
+        Максимальное количество ответов - 10
+        <br>
+        <br>
+    {% endif %}
+    {% if answers.count > 1%}
+        <button><a href = "/"> Готово</a></button>
+    {% else %}
+        Должно быть минимум 2 ответа
+    {% endif %}
     </div>
 {% endblock %}

@@ -2,9 +2,9 @@
 {% load staticfiles %}
 
 {% block vote %}
-    <div class="large-offset-1 large-8 columns">
+    <div class="large-offset-1 large-7 columns">
 <h4> {{ vote.date }}</h4>
-<h2> {{ vote.theme }}</h2>
+<h2> {{ vote.question }}</h2>
 <hr>
 <p>Варианты ответа:</p>
     {% if vote.is_single %}
@@ -44,5 +44,29 @@
         </p>
     {% endif %}
     <!--<form action="/votes/vote/{{ vote.id }}" method="post"> {% csrf_token %} </form>-->
+    </div>
+    <div class="large-offset-0 large-4 column">
+        <script>
+       google.load("visualization", "1", {packages:["corechart"]});
+       google.setOnLoadCallback(drawChart);
+       function drawChart() {
+           var data = new google.visualization.DataTable();
+           data.addColumn('string', 'answer')
+           data.addColumn('number', 'count')
+           {% for answer in answers %}
+           data.addRows([
+              ['{{ answer.text }}', {{ answer.count }}],
+            ]);
+           {% endfor %}
+        var options = {
+         title: 'Результат голосования',
+         is3D: true,
+         pieResidueSliceLabel: 'Остальное'
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('air'));
+         chart.draw(data, options);
+       }
+  </script>
+  <div id="air" style="width: 500px; height: 400px;"></div>
     </div>
 {% endblock %}
